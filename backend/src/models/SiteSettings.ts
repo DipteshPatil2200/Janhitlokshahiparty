@@ -20,6 +20,7 @@ export const siteSettingsSchema = new Schema(
     heroSubtitle: { type: localizedSchema, default: () => ({ en: "", mr: "" }) },
     heroImage: { type: String, default: "" },
     about: { type: localizedSchema, default: () => ({ en: "", mr: "" }) },
+    aboutImage: { type: String, default: "" },
     vision: {
       type: new Schema(
         {

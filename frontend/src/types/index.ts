@@ -171,6 +171,7 @@ export interface SiteSettings {
   heroSubtitle?: LocalizedText;
   heroImage?: string;
   about?: LocalizedText;
+  aboutImage?: string;
   vision?: { en?: string[]; mr?: string[] };
   mission?: { en?: string[]; mr?: string[] };
   facebookUrl?: string;

@@ -190,6 +190,7 @@ function SettingsForm({
             <div className="grid gap-4 sm:grid-cols-2">
               <FieldInput field={{ kind: "image", key: "logo", label: "Logo" }} value={data.logo} onChange={(v) => set("logo", v)} locale={locale} />
               <FieldInput field={{ kind: "image", key: "heroImage", label: "Hero image" }} value={data.heroImage} onChange={(v) => set("heroImage", v)} locale={locale} />
+              <FieldInput field={{ kind: "image", key: "aboutImage", label: "About Us image" }} value={data.aboutImage} onChange={(v) => set("aboutImage", v)} locale={locale} />
             </div>
             <div className="grid gap-4 sm:grid-cols-2">
               <LocalizedField label="Hero title" value={data.heroTitle} onChange={(v) => set("heroTitle", v)} locale={locale} />

@@ -1,4 +1,4 @@
-﻿import { SectionHeading } from "@/components/ui/section-heading";
+import { SectionHeading } from "@/components/ui/section-heading";
 import { LinkButton } from "@/components/ui/button";
 import { SmartImage } from "@/components/ui/smart-image";
 import type { Locale, SiteSettings } from "@/types";
@@ -15,10 +15,10 @@ export function AboutPreview({ locale, settings }: { locale: Locale; settings?: 
       <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
         <div className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl border border-border bg-stone-100 shadow-card">
           <SmartImage
-            src={null}
+            src={settings?.aboutImage || null}
             fit="cover"
             fallback={L === "mr" ? "[अधिकृत छायाचित्र]" : "[Official Photo]"}
-            alt=""
+            alt={L === "mr" ? "पक्षाच्या अधिकृत कार्यक्रमातील छायाचित्र" : "Official party programme"}
           />
         </div>
         <div>

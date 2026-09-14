@@ -1,4 +1,4 @@
-﻿import type { Metadata } from "next";
+import type { Metadata } from "next";
 import { buildMetadata } from "@/lib/seo";
 import { PageHeader } from "@/components/ui/page-header";
 import { SectionHeading } from "@/components/ui/section-heading";
@@ -80,10 +80,10 @@ export default async function AboutPage({ params }: Props) {
         <div className="mb-12 grid items-center gap-10 lg:grid-cols-2">
           <div className="aspect-[4/3] w-full overflow-hidden rounded-2xl border border-border bg-stone-100">
             <SmartImage
-              src={null}
+              src={settings?.aboutImage || null}
               fit="cover"
               fallback={L === "mr" ? "[अधिकृत छायाचित्र]" : "[Official Photo]"}
-              alt=""
+              alt={L === "mr" ? "पक्षाच्या अधिकृत कार्यक्रमातील छायाचित्र" : "Official party programme"}
             />
           </div>
           <div className="space-y-8">

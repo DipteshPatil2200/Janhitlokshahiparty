@@ -199,6 +199,7 @@ export interface ApiSiteSettings {
   heroSubtitle?: ApiLocalized;
   heroImage?: string;
   about?: ApiLocalized;
+  aboutImage?: string;
   vision?: { en?: string[]; mr?: string[] };
   mission?: { en?: string[]; mr?: string[] };
   facebookUrl?: string;

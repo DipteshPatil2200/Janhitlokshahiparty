@@ -10,7 +10,8 @@
     "start": "node dist/server.js",
     "seed": "tsx src/seed.ts",
     "import:official-assets": "tsx src/import-official-assets.ts",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "import:pdf-leadership": "tsx src/import-pdf-leadership.ts"
   },
   "engines": {
     "node": ">=18"
