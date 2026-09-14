@@ -1,0 +1,149 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 38 45% 97%;
+    --foreground: 20 10% 9%;
+
+    --party-saffron: #e97800;
+    --party-orange: #f28c00;
+    --party-gold: #f5b400;
+    --party-green: #315b20;
+    --party-green-dark: #1f4018;
+    --party-white: #ffffff;
+    --party-off-white: #faf8f3;
+    --party-charcoal: #252525;
+    --party-black: #151515;
+
+    --text-primary: #1c1a17;
+    --text-secondary: #44403b;
+    --text-muted: #6b665f;
+
+    --border-light: #e9e2d6;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-paper text-ink antialiased;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply text-ink;
+  }
+
+  ::selection {
+    background-color: var(--party-saffron);
+    color: #fff;
+  }
+
+  /* Respect reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-brand-600;
+  }
+}
+
+@layer components {
+  /* Main content container — prevents over-stretching on wide screens. */
+  .container-page {
+    @apply mx-auto w-full max-w-[1280px] px-4 sm:px-6 lg:px-8;
+  }
+
+  /* Slightly wider variant for hero/featured areas. */
+  .container-wide {
+    @apply mx-auto w-full max-w-[1440px] px-4 sm:px-6 lg:px-8;
+  }
+
+  .section {
+    @apply py-16 md:py-24;
+  }
+
+  .section-tight {
+    @apply py-12 md:py-16;
+  }
+
+  /* Small saffron label above section headings. */
+  .eyebrow {
+    @apply text-xs font-bold uppercase tracking-[0.18em] text-brand-600;
+  }
+
+  /* A decorative hairline that accompanies eyebrows/headings. */
+  .eyebrow-line {
+    @apply inline-flex h-px w-8 bg-brand-500 align-middle;
+  }
+
+  /* Primary brand button (saffron). */
+  .btn-saffron {
+    @apply inline-flex items-center justify-center gap-2 rounded-md bg-brand-500 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-brand-600 active:bg-brand-700;
+  }
+
+  /* Secondary brand button (deep green). */
+  .btn-green {
+    @apply inline-flex items-center justify-center gap-2 rounded-md bg-green-700 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-green-800 active:bg-green-900;
+  }
+
+  /* Charcoal/dark button. */
+  .btn-charcoal {
+    @apply inline-flex items-center justify-center gap-2 rounded-md bg-ink px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-ink-soft;
+  }
+
+  /* Outline button. */
+  .btn-outline {
+    @apply inline-flex items-center justify-center gap-2 rounded-md border border-border-strong bg-white px-5 py-2.5 text-sm font-semibold text-ink transition-colors hover:border-brand-400 hover:text-brand-700;
+  }
+
+  /* Card used across sections. */
+  .card {
+    @apply rounded-xl border border-border bg-white;
+  }
+
+  /* Statistic block on about/sections. */
+  .stat-value {
+    @apply text-3xl font-extrabold text-brand-600;
+  }
+  .stat-label {
+    @apply mt-1 text-xs font-medium uppercase tracking-wider text-ink-muted;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  .text-pretty {
+    text-wrap: pretty;
+  }
+
+  /* Prevent horizontal overflow from decorative hero shapes. */
+  .overflow-x-clip {
+    overflow-x: clip;
+  }
+}

@@ -1,0 +1,10 @@
+**/node_modules/
+**/.next/
+**/dist/
+**/.env
+**/.env.*
+*.pem
+*.key
+*.tsbuildinfo
+npm-debug.log*
+.DS_Store
