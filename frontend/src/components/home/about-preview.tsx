@@ -8,7 +8,7 @@ export function AboutPreview({ locale, settings }: { locale: Locale; settings?: 
   const aboutText =
     settings?.about?.[L] ||
     (L === "mr"
-      ? "जनहित लोकशाही पक्ष ही महाराष्ट्रातील एक लोकाभिमुख राजकीय संघटना आहे. जनतेचे हक्क, पारदर्शकता आणि सर्वसमावेशक विकास या तत्त्वांवर आमचा विश्वास आहे."
+      ? "जनहित लोकशाही पक्ष ही महाराष्ट्रातील एक लोकाभिमुख राजकीय संघटना आहे. जनतेचे हक्क, पारदर्शकता आणि सर्वसमावेशक विकास या तत्त्वांवर आमचा विश्वास आहे"
       : "Janhit Lokshahi Party is a people-centric political organisation in Maharashtra. We believe in the rights of the people, transparency, and inclusive development.");
   return (
     <section className="section container-page">
