@@ -14,7 +14,7 @@
     "import:pdf-leadership": "tsx src/import-pdf-leadership.ts"
   },
   "engines": {
-    "node": "20.x"
+    "node": "24.x"
   },
   "dependencies": {
     "@types/cors": "^2.8.19",
