@@ -28,9 +28,7 @@ const storage = new CloudinaryStorage({
     const isImage = ALLOWED_IMAGES.includes(file.mimetype);
 
     return {
-      folder: isImage
-        ? "janhit-lokshahi-party/images"
-        : "janhit-lokshahi-party/documents",
+      folder: "jlp-uploads",
       resource_type: isImage ? "image" : "raw",
     };
   },

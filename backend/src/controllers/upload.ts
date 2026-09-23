@@ -18,12 +18,16 @@ export function uploadFiles(
       throw new AppError(400, "No files uploaded");
     }
 
-    const results = files.map((f) => ({
-      url: f.path,
-      originalName: f.originalname,
-      mimeType: f.mimetype,
-      size: f.size,
-    }));
+    const results = files.map((f) => {
+      const secureUrl = f.path;
+
+      return {
+        url: secureUrl,
+        originalName: f.originalname,
+        mimeType: f.mimetype,
+        size: f.size,
+      };
+    });
 
     res.status(201).json({ files: results });
   } catch (err) {
