@@ -41,5 +41,10 @@ export const env = {
   uploadDir: path.resolve(__dirname, "../../", process.env.UPLOAD_DIR || "../uploads"),
   maxUploadSizeMb: Number(process.env.MAX_UPLOAD_SIZE_MB || 10),
   publicBaseUrl: process.env.PUBLIC_BASE_URL || "http://localhost:4000",
+
+  cloudinaryCloudName: process.env.CLOUDINARY_CLOUD_NAME || "",
+  cloudinaryApiKey: process.env.CLOUDINARY_API_KEY || "",
+  cloudinaryApiSecret: process.env.CLOUDINARY_API_SECRET || "",
+
   seedDemo: process.env.SEED_DEMO === "true",
 } as const;

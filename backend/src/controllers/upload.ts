@@ -1,47 +1,72 @@
 import type { Request, Response, NextFunction } from "express";
-import fs from "fs";
-import path from "path";
-import { env } from "../config/env";
-import { toPublicFileUrl } from "../utils/files";
+import { v2 as cloudinary } from "cloudinary";
 import { AppError } from "../middleware/error";
 
-/** Upload one or many files; returns public URLs + metadata. */
-export function uploadFiles(req: Request, res: Response, next: NextFunction) {
+/**
+ * Upload one or many files to Cloudinary.
+ * Returns Cloudinary public URLs + metadata.
+ */
+export function uploadFiles(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
   try {
     const files = (req.files as Express.Multer.File[]) ?? [];
-    if (!files.length) throw new AppError(400, "No files uploaded");
+
+    if (!files.length) {
+      throw new AppError(400, "No files uploaded");
+    }
+
     const results = files.map((f) => ({
-      url: toPublicFileUrl(path.resolve(f.path)),
+      url: f.path,
       originalName: f.originalname,
       mimeType: f.mimetype,
       size: f.size,
     }));
+
     res.status(201).json({ files: results });
   } catch (err) {
     next(err);
   }
 }
 
-/** Delete an uploaded file by its public URL path. Protected. */
-export function deleteFile(req: Request, res: Response, next: NextFunction) {
+/**
+ * Delete an uploaded file from Cloudinary.
+ * Protected route.
+ */
+export async function deleteFile(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
   try {
     const { url } = req.body;
-    if (!url || typeof url !== "string") throw new AppError(400, "url required");
-    // Strip a known public prefix (with or without /api) so a bare relative
-    // name or public URL resolves back into the upload dir.
-    let rel = url;
-    const base = env.publicBaseUrl.replace(/\/$/, "");
-    for (const prefix of [`${base}/api/uploads/`, `${base}/uploads/`]) {
-      if (rel.startsWith(prefix)) {
-        rel = rel.slice(prefix.length);
-        break;
-      }
+
+    if (!url || typeof url !== "string") {
+      throw new AppError(400, "url required");
     }
-    const root = path.resolve(env.uploadDir);
-    const abs = path.resolve(root, rel);
-    const within = abs === root || abs.startsWith(root + path.sep);
-    if (!within) throw new AppError(400, "Invalid file path");
-    if (fs.existsSync(abs) && fs.statSync(abs).isFile()) fs.unlinkSync(abs);
+
+    // Extract Cloudinary public ID from URL
+    const match = url.match(/\/upload\/(?:v\d+\/)?(.+)$/);
+
+    if (!match) {
+      throw new AppError(400, "Invalid Cloudinary URL");
+    }
+
+    const publicIdWithExtension = decodeURIComponent(match[1]);
+
+    // Documents are stored as raw files.
+    const isRaw = /\/raw\/upload\//.test(url);
+
+    const publicId = isRaw
+      ? publicIdWithExtension
+      : publicIdWithExtension.replace(/\.[^/.]+$/, "");
+
+    await cloudinary.uploader.destroy(publicId, {
+      resource_type: isRaw ? "raw" : "image",
+    });
+
     res.json({ deleted: true });
   } catch (err) {
     next(err);
