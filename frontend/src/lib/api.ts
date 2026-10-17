@@ -67,6 +67,31 @@ export const api = {
   del: <T>(path: string) => fetchJson<T>(path, { method: "DELETE" }),
 };
 
+interface ApiListResponse<T> {
+  items: T[];
+  totalPages: number;
+}
+
+async function getAllPublicItems<T>(path: string): Promise<T[]> {
+  const getPage = (page: number) =>
+    api.get<ApiListResponse<T>>(`${path}?page=${page}&limit=100`);
+  const firstPage = await getPage(1);
+  if (
+    !Array.isArray(firstPage.items) ||
+    !Number.isSafeInteger(firstPage.totalPages) ||
+    firstPage.totalPages < 0
+  ) {
+    throw new Error(`Unexpected paginated response from ${path}.`);
+  }
+
+  const laterPages = await Promise.all(
+    Array.from({ length: Math.max(0, firstPage.totalPages - 1) }, (_, index) =>
+      getPage(index + 2),
+    ),
+  );
+  return [firstPage, ...laterPages].flatMap((page) => page.items);
+}
+
 // =============================================================
 // TYPES from the backend API (matching Mongoose documents)
 // =============================================================
@@ -250,6 +275,7 @@ export function mapNews(n: ApiNews): NewsItem {
       | "event"
       | "update",
     date: n.publishedAt || new Date().toISOString(),
+    publishedAt: n.publishedAt || undefined,
     featuredImage: n.coverImage || undefined,
     excerpt: lt(n.excerpt),
     content: lt(n.content),
@@ -477,6 +503,24 @@ export async function getVideos(): Promise<VideoItem[]> {
 export async function getDocuments(): Promise<DocumentItem[]> {
   const data = await api.get<{ items: ApiDocument[] }>("/documents?limit=100");
   return data.items.map(mapDocument);
+}
+
+export async function getSitemapContent() {
+  const [news, leaders, campaigns, events, galleries] = await Promise.all([
+    getAllPublicItems<ApiNews>("/news"),
+    getAllPublicItems<ApiLeader>("/leaders"),
+    getAllPublicItems<ApiCampaign>("/campaigns"),
+    getAllPublicItems<ApiEvent>("/events"),
+    getAllPublicItems<ApiGallery>("/gallery"),
+  ]);
+
+  return {
+    news: news.map(mapNews),
+    leaders: leaders.filter((leader) => leader.isActive !== false).map(mapLeader),
+    campaigns: campaigns.map(mapCampaign),
+    events: events.map(mapEvent),
+    galleries: galleries.map(mapAlbum),
+  };
 }
 
 export async function getOrgTree(): Promise<OrgNode[]> {

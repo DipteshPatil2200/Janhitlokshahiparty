@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { Hero } from "@/components/home/hero";
 import { QuickActions } from "@/components/home/quick-actions";
 import { AboutPreview } from "@/components/home/about-preview";
@@ -12,7 +13,28 @@ import { getGalleryAlbums } from "@/data/gallery";
 import { getVideos } from "@/data/gallery";
 import { getSiteSettings } from "@/lib/api";
 import { getBankDetails } from "@/data/donation";
+import { buildMetadata } from "@/lib/seo";
 import type { BankDetails, GalleryAlbum, Locale, SiteSettings, VideoItem } from "@/types";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: { lang: string };
+}): Promise<Metadata> {
+  const locale = params.lang === "mr" ? "mr" : "en";
+  return buildMetadata({
+    title:
+      locale === "mr"
+        ? "महाराष्ट्रातील जनहिताचे राजकारण"
+        : "People-First Politics in Maharashtra",
+    description:
+      locale === "mr"
+        ? "जनहित लोकशाही पक्षाचे अधिकृत संकेतस्थळ. महाराष्ट्रातील पक्षाची दृष्टी, नेतृत्व, जनहिताचे उपक्रम, बातम्या, मोहिमा आणि कार्यक्रम जाणून घ्या."
+        : "Official website of Janhit Lokshahi Party in Maharashtra. Read the party's vision, meet its leadership, and find updates on public initiatives, campaigns, and events.",
+    path: "/",
+    locale,
+  });
+}
 
 export default async function HomePage({ params }: { params: { lang: string } }) {
   const locale = (params.lang === "mr" ? "mr" : "en") as Locale;

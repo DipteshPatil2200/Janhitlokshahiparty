@@ -1,10 +1,13 @@
 import type { MetadataRoute } from "next";
 import { siteConfig } from "@/data/site";
-import { getNewsListSafe } from "@/data/news";
-import { getLeaders } from "@/data/leaders";
-import { getCampaigns } from "@/data/campaigns";
-import { getGalleryAlbums } from "@/data/gallery";
-import { getEvents } from "@/data/campaigns";
+import { getSitemapContent } from "@/lib/api";
+import {
+  getAvailableLocales,
+  getLocalizedUrl,
+} from "@/lib/seo";
+import type { Locale } from "@/types";
+
+export const dynamic = "force-dynamic";
 
 const staticPaths = [
   "/",
@@ -27,40 +30,57 @@ const staticPaths = [
   "/disclaimer",
 ];
 
+interface SitemapRoute {
+  path: string;
+  locales: Locale[];
+}
+
+function localizedAlternates(
+  route: SitemapRoute,
+): NonNullable<MetadataRoute.Sitemap[number]["alternates"]> {
+  return {
+    languages: Object.fromEntries(
+      route.locales.map((locale) => [locale, getLocalizedUrl(route.path, locale)]),
+    ),
+  };
+}
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const now = new Date();
+  const { news, leaders, campaigns, events, galleries } = await getSitemapContent();
 
-  // Dynamic detail slugs (best-effort; safe fns never throw).
-  const [news, leaders, campaigns, albums, events] = await Promise.all([
-    getNewsListSafe(500),
-    getLeaders(),
-    getCampaigns(),
-    getGalleryAlbums(),
-    getEvents(),
-  ]);
+  const routes: SitemapRoute[] = staticPaths.map((path) => ({
+    path,
+    locales: [...siteConfig.locales],
+  }));
 
-  const detailPaths: string[] = [
-    ...news.map((n) => `/news/${n.slug}`),
-    ...leaders.map((l) => `/leadership/${l.slug}`),
-    ...campaigns.map((c) => `/campaigns/${c.slug}`),
-    ...albums.map((a) => `/gallery/${a.slug}`),
-    ...events.map((e) => `/events/${e.slug}`),
-  ];
+  routes.push(
+    ...news.map((item) => ({
+      path: `/news/${item.slug}`,
+      locales: getAvailableLocales(item.title),
+    })),
+    ...leaders.map((leader) => ({
+      path: `/leadership/${leader.slug}`,
+      locales: getAvailableLocales(leader.name),
+    })),
+    ...campaigns.map((campaign) => ({
+      path: `/campaigns/${campaign.slug}`,
+      locales: getAvailableLocales(campaign.title),
+    })),
+    ...galleries.map((album) => ({
+      path: `/gallery/${album.slug}`,
+      locales: getAvailableLocales(album.title),
+    })),
+    ...events.map((event) => ({
+      path: `/events/${event.slug}`,
+      locales: getAvailableLocales(event.title),
+    })),
+  );
 
-  const allPaths = [...staticPaths, ...detailPaths];
-
-  const localizedUrl = (locale: "en" | "mr", p: string) =>
-    p === "/" ? `${siteConfig.url}/${locale}` : `${siteConfig.url}/${locale}${p}`;
-
-  const entries = allPaths.flatMap((path) => {
-    const entry = (locale: "en" | "mr"): MetadataRoute.Sitemap[number] => ({
-      url: localizedUrl(locale, path),
-      lastModified: now,
-      changeFrequency: "weekly",
-      priority: path === "/" ? 1 : path.startsWith("/news/") ? 0.7 : 0.8,
-    });
-    return [entry("en"), entry("mr")];
-  });
-
-  return entries;
+  const uniqueRoutes = new Map(routes.map((route) => [route.path, route]));
+  return Array.from(uniqueRoutes.values()).flatMap((route) =>
+    route.locales.map((locale: Locale) => ({
+      url: getLocalizedUrl(route.path, locale),
+      alternates: localizedAlternates(route),
+    })),
+  );
 }

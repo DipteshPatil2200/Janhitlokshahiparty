@@ -103,6 +103,10 @@ scattered through the app.
 
 Per-page metadata via `src/lib/seo.ts` (`buildMetadata`), plus dynamic
 `sitemap.ts` and `robots.ts`. Canonical URLs include the locale prefix.
+Production canonicals, structured data, and sitemap URLs always use the
+verified origin `https://www.janhitlokshahiparty.in`. `NEXT_PUBLIC_SITE_URL`
+only overrides the origin outside production; local development defaults to
+`http://localhost:3000`.
 
 ## Security Notes
 

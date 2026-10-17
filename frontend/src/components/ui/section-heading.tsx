@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils";
 interface SectionHeadingProps {
   eyebrow?: React.ReactNode;
   heading: React.ReactNode;
+  level?: "h1" | "h2";
   description?: React.ReactNode;
   align?: "left" | "center";
   className?: string;
@@ -12,10 +13,13 @@ interface SectionHeadingProps {
 export function SectionHeading({
   eyebrow,
   heading,
+  level = "h2",
   description,
   align = "left",
   className,
 }: SectionHeadingProps) {
+  const Heading = level;
+
   return (
     <div
       className={cn(
@@ -25,9 +29,9 @@ export function SectionHeading({
       )}
     >
       {eyebrow ? <p className="eyebrow mb-3">{eyebrow}</p> : null}
-      <h2 className="text-3xl font-bold tracking-tight sm:text-4xl text-balance">
+      <Heading className="text-3xl font-bold tracking-tight sm:text-4xl text-balance">
         {heading}
-      </h2>
+      </Heading>
       {description ? (
         <p className="mt-4 text-base leading-relaxed text-ink-muted text-pretty">
           {description}

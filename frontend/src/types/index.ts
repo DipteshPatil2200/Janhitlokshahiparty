@@ -62,6 +62,7 @@ export interface NewsItem {
   title: LocalizedText;
   category: NewsCategory;
   date: string; // ISO
+  publishedAt?: string;
   featuredImage?: string;
   excerpt: LocalizedText;
   content: LocalizedText; // markdown-ish plain text

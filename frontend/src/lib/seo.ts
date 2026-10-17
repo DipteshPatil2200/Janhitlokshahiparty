@@ -1,44 +1,57 @@
 import type { Metadata } from "next";
 import { siteConfig } from "@/data/site";
-import type { Locale } from "@/types";
+import type { Locale, LocalizedText } from "@/types";
 
 interface PageMeta {
   title: string;
   description: string;
   path: string;
   locale?: Locale;
+  alternateLocales?: Locale[];
   image?: string;
   type?: "website" | "article";
   publishedTime?: string;
   keywords?: string[];
 }
 
-/**
- * Build SEO metadata for a page. `path` should be locale-relative,
- * e.g. "/about". The canonical URL is built from the site URL and,
- * for non-default locales, the locale prefix.
- */
+function normalizePath(path: string): string {
+  const pathname = path.split(/[?#]/, 1)[0] || "/";
+  const segments = pathname.split("/").filter(Boolean);
+  return segments.length ? `/${segments.join("/")}` : "/";
+}
+
+export function getLocalizedUrl(path: string, locale: Locale): string {
+  const normalizedPath = normalizePath(path);
+  return `${siteConfig.url}/${locale}${normalizedPath === "/" ? "" : normalizedPath}`;
+}
+
+export function getAvailableLocales(
+  ...translations: (LocalizedText | undefined)[]
+): Locale[] {
+  return siteConfig.locales.filter((locale) =>
+    translations.every((translation) => !translation || translation[locale]?.trim()),
+  );
+}
+
 export function buildMetadata({
   title,
   description,
   path,
   locale = "en",
+  alternateLocales = [...siteConfig.locales],
   image,
   type = "website",
   publishedTime,
   keywords,
 }: PageMeta): Metadata {
-  // Every page is served under a locale prefix (`/en/...`, `/mr/...`); the
-  // bare root `/` redirects to `/en`, so canonical + hreflang URLs always
-  // include the locale prefix.
-  const localized = path === "/" ? `/${locale}` : `/${locale}${path}`;
-  const canonicalUrl = `${siteConfig.url}${localized}`;
-  const langUrl = (l: "en" | "mr", p: string) =>
-    p === "/" ? `${siteConfig.url}/${l}` : `${siteConfig.url}/${l}${p}`;
-
-  const languages: Record<string, string> = {};
-  languages[siteConfig.localeDefault] = langUrl(siteConfig.localeDefault, path);
-  languages.mr = langUrl("mr", path);
+  const canonicalUrl = getLocalizedUrl(path, locale);
+  const languages = Object.fromEntries(
+    alternateLocales.map((alternateLocale) => [
+      alternateLocale,
+      getLocalizedUrl(path, alternateLocale),
+    ]),
+  );
+  const localizedSiteName = locale === "mr" ? siteConfig.nameMarathi : siteConfig.name;
 
   return {
     title,
@@ -49,20 +62,24 @@ export function buildMetadata({
       languages,
     },
     openGraph: {
-      title,
+      title: `${title} | ${localizedSiteName}`,
       description,
       url: canonicalUrl,
       type,
       ...(publishedTime && { publishedTime }),
       ...(image && { images: [{ url: image, width: 1200, height: 630 }] }),
       locale: locale === "mr" ? "mr_IN" : "en_IN",
-      siteName: siteConfig.name,
+      siteName: localizedSiteName,
     },
     twitter: {
       card: image ? "summary_large_image" : "summary",
-      title,
+      title: `${title} | ${localizedSiteName}`,
       description,
       ...(image && { images: [image] }),
     },
   };
+}
+
+export function serializeJsonLd(value: Record<string, unknown>): string {
+  return JSON.stringify(value).replace(/</g, "\\u003c");
 }

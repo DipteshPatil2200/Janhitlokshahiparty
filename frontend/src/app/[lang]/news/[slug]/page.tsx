@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Calendar, ArrowLeft, Facebook, Twitter, Send } from "lucide-react";
 import { CopyLinkButton } from "@/components/ui/copy-link-button";
-import { buildMetadata } from "@/lib/seo";
+import { buildMetadata, getAvailableLocales, getLocalizedUrl } from "@/lib/seo";
 import { PageHeader } from "@/components/ui/page-header";
 import { getLocalizedText, localizePath } from "@/lib/i18n";
 import { getNewsBySlug, getNewsListSafe, getCategoryLabel } from "@/data/news";
@@ -22,11 +22,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!item) return {};
   return buildMetadata({
     title: getLocalizedText(item.title, locale),
-    description: getLocalizedText(item.excerpt, locale),
+    description:
+      getLocalizedText(item.excerpt, locale) ||
+      getLocalizedText(item.content, locale).slice(0, 160),
     path: `/news/${item.slug}`,
     locale,
+    alternateLocales: getAvailableLocales(item.title),
     type: "article",
-    publishedTime: item.date,
+    publishedTime: item.publishedAt,
     image: item.featuredImage,
   });
 }
@@ -42,7 +45,7 @@ export default async function NewsDetailPage({ params }: Props) {
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
     .slice(0, 3);
 
-  const shareUrl = `${process.env.NEXT_PUBLIC_SITE_URL || ""}/${locale === "en" ? "" : "mr/"}news/${item.slug}`;
+  const shareUrl = getLocalizedUrl(`/news/${item.slug}`, locale);
   const L = locale;
 
   return (

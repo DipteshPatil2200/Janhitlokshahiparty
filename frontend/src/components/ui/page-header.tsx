@@ -18,7 +18,13 @@ export function PageHeader({ eyebrow, title, description, align, className }: Pa
         aria-hidden="true"
       />
       <div className={cn("container-page py-14 md:py-20", align === "center" && "text-center")}>
-        <SectionHeading eyebrow={eyebrow} heading={title} description={description} align={align} />
+        <SectionHeading
+          eyebrow={eyebrow}
+          heading={title}
+          level="h1"
+          description={description}
+          align={align}
+        />
       </div>
     </section>
   );

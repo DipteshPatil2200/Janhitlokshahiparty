@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, Image as ImageIcon } from "lucide-react";
-import { buildMetadata } from "@/lib/seo";
+import { buildMetadata, getAvailableLocales } from "@/lib/seo";
 import { PageHeader } from "@/components/ui/page-header";
 import { getLocalizedText, localizePath } from "@/lib/i18n";
 import { getGalleryAlbumBySlug } from "@/data/gallery";
@@ -20,9 +20,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!album) return {};
   return buildMetadata({
     title: getLocalizedText(album.title, locale),
-    description: getLocalizedText(album.description, locale),
+    description:
+      getLocalizedText(album.description, locale) ||
+      getLocalizedText(album.title, locale),
     path: `/gallery/${album.slug}`,
     locale,
+    alternateLocales: getAvailableLocales(album.title),
   });
 }
 

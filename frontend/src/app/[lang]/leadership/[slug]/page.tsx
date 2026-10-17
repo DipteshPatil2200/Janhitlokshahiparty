@@ -1,6 +1,6 @@
 ﻿import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { buildMetadata } from "@/lib/seo";
+import { buildMetadata, getAvailableLocales } from "@/lib/seo";
 import { PageHeader } from "@/components/ui/page-header";
 import { getLocalizedText } from "@/lib/i18n";
 import { getLeaderBySlug } from "@/data/leaders";
@@ -20,6 +20,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     description: getLocalizedText(leader.designation, locale),
     path: `/leadership/${leader.slug}`,
     locale,
+    alternateLocales: getAvailableLocales(leader.name),
   });
 }
 
@@ -50,9 +51,9 @@ export default async function LeaderDetailPage({ params }: Props) {
             </div>
           </div>
           <div className="lg:col-span-2">
-            <h1 className="text-3xl font-bold text-ink">
+            <h2 className="text-3xl font-bold text-ink">
               {getLocalizedText(leader.name, L)}
-            </h1>
+            </h2>
             <p className="mt-2 text-lg font-medium text-brand-700">
               {getLocalizedText(leader.designation, L)}
             </p>

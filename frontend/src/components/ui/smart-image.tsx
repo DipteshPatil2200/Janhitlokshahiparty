@@ -30,6 +30,8 @@ export function SmartImage({
   fallback = "[Image]",
   className,
   alt,
+  priority,
+  loading,
   ...props
 }: SmartImageProps) {
   const srcString = getImageUrl(src);
@@ -52,7 +54,7 @@ export function SmartImage({
         src={srcString}
         alt={typeof alt === "string" ? alt : ""}
         className={cn("h-full w-full", fit === "contain" ? "object-contain" : "object-cover", className)}
-        loading="lazy"
+        loading={priority ? "eager" : loading || "lazy"}
         onError={() => setFailed(true)}
       />
     );
@@ -69,6 +71,8 @@ export function SmartImage({
       width={1600}
       height={900}
       onError={() => setFailed(true)}
+      priority={priority}
+      loading={loading}
       className={cn(
         "h-full w-full",
         fit === "contain" ? "object-contain" : "object-cover",

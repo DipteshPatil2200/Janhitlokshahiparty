@@ -11,6 +11,10 @@ interface Props {
 const legalDocs = {
   privacy: {
     title: { en: "Privacy Policy", mr: "गोपनीयता धोरण" },
+    description: {
+      en: "Read how this website handles information submitted through its forms.",
+      mr: "या संकेतस्थळावरील फॉर्मद्वारे दिलेल्या माहितीचा वापर कसा केला जातो ते वाचा.",
+    },
     sections: [
       {
         heading: { en: "Information We Collect", mr: "आम्ही गोळा करत असलेली माहिती" },
@@ -23,6 +27,10 @@ const legalDocs = {
   },
   terms: {
     title: { en: "Terms of Use", mr: "वापराच्या अटी" },
+    description: {
+      en: "Review the terms for accessing and using the Janhit Lokshahi Party website.",
+      mr: "जनहित लोकशाही पक्षाच्या संकेतस्थळाचा वापर करण्याच्या अटी जाणून घ्या.",
+    },
     sections: [
       {
         heading: { en: "Acceptance of Terms", mr: "अटींची मान्यता" },
@@ -35,6 +43,10 @@ const legalDocs = {
   },
   disclaimer: {
     title: { en: "Disclaimer", mr: "अस्वीकरण" },
+    description: {
+      en: "Read the general information and limitations that apply to this website.",
+      mr: "या संकेतस्थळावरील सामान्य माहिती आणि तिच्या मर्यादांविषयी वाचा.",
+    },
     sections: [
       {
         heading: { en: "General Information", mr: "सामान्य माहिती" },
@@ -53,7 +65,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!doc) return {};
   return buildMetadata({
     title: locale === "mr" ? doc.title.mr : doc.title.en,
-    description: locale === "mr" ? doc.title.mr : doc.title.en,
+    description: locale === "mr" ? doc.description.mr : doc.description.en,
     path: `/${params.slug}`,
     locale,
   });

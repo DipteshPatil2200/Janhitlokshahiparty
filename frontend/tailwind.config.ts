@@ -74,17 +74,17 @@ const config: Config = {
         },
         // ---- Secondary brand color = DEEP GREEN ----
         green: {
-          50: "#F0F5EE",
-          100: "#DCE9D8",
-          200: "#BBD2B3",
-          300: "#94B688",
-          400: "#6C9A5E",
-          500: "#4C7D3E",
-          600: "#3A662E",
-          700: "#315B20",
-          800: "#264A19",
-          900: "#1F4018",
-          950: "#12290E",
+          50: "#FFFFFF",
+          100: "#F9FAFB",
+          200: "#F3F4F6",
+          300: "#E5E7EB",
+          400: "#D1D5DB",
+          500: "#9CA3AF",
+          600: "#6B7280",
+          700: "#4B5563",
+          800: "#374151",
+          900: "#1F2937",
+          950: "#111827",
         },
         // ---- Gold / subtle accent ----
         gold: {
@@ -93,8 +93,8 @@ const config: Config = {
           dark: "#C98D00",
         },
         // ---- Warm neutral canvas & text ----
-        paper: "#FAF8F3",
-        "off-white": "#FAF8F3",
+        paper: "#FFFFFF",
+        "off-white": "#F9FAFB",
         ink: {
           DEFAULT: "#1C1A17",
           soft: "#44403B",

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, Calendar, MapPin } from "lucide-react";
-import { buildMetadata } from "@/lib/seo";
+import { buildMetadata, getAvailableLocales } from "@/lib/seo";
 import { PageHeader } from "@/components/ui/page-header";
 import { getLocalizedText, localizePath } from "@/lib/i18n";
 import { getEventDetails, getEvents } from "@/data/campaigns";
@@ -21,11 +21,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!item) return {};
   return buildMetadata({
     title: getLocalizedText(item.title, locale),
-    description: getLocalizedText(item.description, locale),
+    description:
+      getLocalizedText(item.description, locale) ||
+      getLocalizedText(item.title, locale),
     path: `/events/${item.slug}`,
     locale,
-    type: "article",
-    publishedTime: item.date,
+    alternateLocales: getAvailableLocales(item.title),
   });
 }
 

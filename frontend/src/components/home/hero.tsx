@@ -26,7 +26,12 @@ export function Hero({ locale, settings }: { locale: Locale; settings?: SiteSett
   // the trailing phrase (e.g. "Janhit Lokshahi Party — The Voice of the People").
   const splitTitle = heroTitle.split(/\s*[\u2014\u2013-]\s*/).filter(Boolean);
   const baseTitle = splitTitle[0] || (L === "mr" ? "जनहित लोकशाही पक्ष" : "Janhit Lokshahi Party");
-  const accentTitle = splitTitle.length > 1 ? splitTitle.slice(1).join(" — ") : (L === "mr" ? "जनतेचा आवाज" : "The Voice of the People");
+  const accentTitle =
+    splitTitle.length > 1
+      ? splitTitle.slice(1).join(" — ")
+      : L === "mr"
+        ? "महाराष्ट्रासाठी जनहिताचे राजकारण"
+        : "People-First Politics in Maharashtra";
 
   const subtitle =
     heroSubtitle ||
@@ -92,6 +97,7 @@ export function Hero({ locale, settings }: { locale: Locale; settings?: SiteSett
               fit="cover"
               fallback={L === "mr" ? "[अधिकृत छायाचित्र]" : "[Official Photo]"}
               alt={baseTitle}
+              priority
               className="bg-green-50"
             />
             {/* Bottom green accent strip */}
