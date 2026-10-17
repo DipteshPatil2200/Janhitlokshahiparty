@@ -1,0 +1,11 @@
+PORT=4000
+NODE_ENV=development
+CLIENT_URL=http://localhost:3000
+MONGODB_URI=mongodb://127.0.0.1:27017/jlp
+JWT_SECRET=jlp-dev-secret-do-not-use-in-production-9d8f7e6a5b4c3d2e1f0
+JWT_EXPIRES_IN=7d
+ADMIN_EMAIL=admin@janhitlokshahi.in
+ADMIN_PASSWORD=Admin@12345
+UPLOAD_DIR=../uploads
+MAX_UPLOAD_SIZE_MB=10
+PUBLIC_BASE_URL=http://localhost:4000
